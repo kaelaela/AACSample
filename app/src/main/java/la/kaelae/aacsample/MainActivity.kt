@@ -20,12 +20,17 @@ class MainActivity : AppCompatActivity() {
     private const val TAG = "## Lifecycle "
   }
 
-  private val observer = GenericLifecycleObserver { _, event -> Log.d(TAG, "onStateChanged:$event") }
+  private val listener by lazy { AccelerationListener(this) }
+
+  private val observer = GenericLifecycleObserver { _, event ->
+    Log.d(TAG, "onStateChanged:$event")
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     lifecycle.addObserver(observer)
+    lifecycle.addObserver(listener)
     Log.d(TAG, "onCreate:${lifecycle.currentState.name}")
     Handler().postDelayed({ Log.d(TAG, "onCreate delay:${lifecycle.currentState.name}") }, 1000L)
     val button: Button = findViewById(R.id.button)
