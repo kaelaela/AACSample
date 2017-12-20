@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun calledOnDestroy(owner: LifecycleOwner) {
       Log.d(TAG, "calledOnDestroy:${owner.lifecycle.currentState.name}")
+//      owner.lifecycle.removeObserver(this)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     lifecycle.addObserver(observer)
+//    lifecycle.addObserver(observer)
     Log.d(TAG, "onCreate:${lifecycle.currentState.name}")
     Handler().postDelayed({ Log.d(TAG, "onCreate delay:${lifecycle.currentState.name}") }, 1000L)
   }
@@ -89,6 +91,7 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     super.onDestroy()
     Log.d(TAG, "onDestroy:${lifecycle.currentState.name}")
+//    lifecycle.removeObserver(observer)
   }
 
   override fun onRestart() {
