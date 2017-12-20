@@ -1,9 +1,6 @@
 package la.kaelae.aacsample
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.OnLifecycleEvent
+import android.arch.lifecycle.GenericLifecycleObserver
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
@@ -16,54 +13,12 @@ class MainActivity : AppCompatActivity() {
     private const val TAG = "Lifecycle "
   }
 
-  private val observer = object : LifecycleObserver {
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun calledOnCreate(owner: LifecycleOwner) {
-      Log.d(TAG, "calledOnCreate:${owner.lifecycle.currentState.name}")
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun calledOnResume(owner: LifecycleOwner) {
-      Log.d(TAG, "calledOnResume:${owner.lifecycle.currentState.name}")
-
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun calledOnStart(owner: LifecycleOwner) {
-      Log.d(TAG, "calledOnStart:${owner.lifecycle.currentState.name}")
-
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun calledOnPause(owner: LifecycleOwner) {
-      Log.d(TAG, "calledOnPause:${owner.lifecycle.currentState.name}")
-
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun calledOnStop(owner: LifecycleOwner) {
-      Log.d(TAG, "calledOnStop:${owner.lifecycle.currentState.name}")
-
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun calledOnDestroy(owner: LifecycleOwner) {
-      Log.d(TAG, "calledOnDestroy:${owner.lifecycle.currentState.name}")
-//      owner.lifecycle.removeObserver(this)
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-    fun calledOnAny(owner: LifecycleOwner, event: Lifecycle.Event) {
-      Log.d(TAG, "calledOnAny:$event")
-    }
-  }
+  private val observer = GenericLifecycleObserver { _, event -> Log.d(TAG, "onStateChanged:$event") }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     lifecycle.addObserver(observer)
-//    lifecycle.addObserver(observer)
     Log.d(TAG, "onCreate:${lifecycle.currentState.name}")
     Handler().postDelayed({ Log.d(TAG, "onCreate delay:${lifecycle.currentState.name}") }, 1000L)
   }
@@ -91,7 +46,7 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     super.onDestroy()
     Log.d(TAG, "onDestroy:${lifecycle.currentState.name}")
-//    lifecycle.removeObserver(observer)
+    lifecycle.removeObserver(observer)
   }
 
   override fun onRestart() {
