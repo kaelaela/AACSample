@@ -6,11 +6,12 @@ import android.os.Handler
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
 
   companion object {
-    private const val TAG = "Lifecycle "
+    private const val TAG = "## Lifecycle "
   }
 
   private val observer = GenericLifecycleObserver { _, event -> Log.d(TAG, "onStateChanged:$event") }
@@ -21,6 +22,9 @@ class MainActivity : AppCompatActivity() {
     lifecycle.addObserver(observer)
     Log.d(TAG, "onCreate:${lifecycle.currentState.name}")
     Handler().postDelayed({ Log.d(TAG, "onCreate delay:${lifecycle.currentState.name}") }, 1000L)
+    findViewById<Button>(R.id.button).setOnClickListener({
+      startActivity(NextActivity.getIntent(this))
+    })
   }
 
   override fun onResume() {
