@@ -2,6 +2,7 @@ package la.kaelae.aacsample
 
 import android.arch.lifecycle.GenericLifecycleObserver
 import android.arch.lifecycle.Lifecycle
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     Handler().postDelayed({ Log.d(TAG, "onCreate delay:${lifecycle.currentState.name}") }, 1000L)
     val button: Button = findViewById(R.id.button)
     button.setOnClickListener({
-      startActivity(NextActivity.getIntent(this))
+      Jobs.enqueueWork(this, Intent())
     })
     Single.timer(5000L, TimeUnit.MILLISECONDS)
         .map { Log.d(TAG, "id:" + Thread.currentThread().id) }
