@@ -1,12 +1,17 @@
 package la.kaelae.aacsample
 
 import android.arch.lifecycle.GenericLifecycleObserver
+import android.arch.lifecycle.Lifecycle
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,9 +27,17 @@ class MainActivity : AppCompatActivity() {
     lifecycle.addObserver(observer)
     Log.d(TAG, "onCreate:${lifecycle.currentState.name}")
     Handler().postDelayed({ Log.d(TAG, "onCreate delay:${lifecycle.currentState.name}") }, 1000L)
-    findViewById<Button>(R.id.button).setOnClickListener({
+    val button: Button = findViewById(R.id.button)
+    button.setOnClickListener({
       startActivity(NextActivity.getIntent(this))
     })
+    Single.timer(5000L, TimeUnit.MILLISECONDS)
+        .map { Log.d(TAG, "id:" + Thread.currentThread().id) }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({
+          if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) button.text = "CHANGED"
+        }, {})
   }
 
   override fun onResume() {
